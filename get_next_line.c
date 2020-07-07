@@ -6,7 +6,7 @@
 /*   By: ywake <ywake@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 01:18:32 by ywake             #+#    #+#             */
-/*   Updated: 2020/07/07 22:35:28 by ywake            ###   ########.fr       */
+/*   Updated: 2020/07/07 22:56:18 by ywake            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,31 @@ void	free_set(char **dst, char *src)
 	*dst = src;
 }
 
+int		ret(ssize_t rdrtn, char *rdbuf)
+{
+	free(rdbuf);
+	if (rdrtn > 0)
+		return (1);
+	else
+		return (rdrtn);
+}
+
+int		myabort(char *rdbuf, char **line, char **remain)
+{
+	free_set(&rdbuf, NULL);
+	free_set(line, NULL);
+	free_set(remain, NULL);
+	return (-1);
+}
+
 int		get_next_line(int fd, char **line)
 {
-	char		rdbuf[BUFFER_SIZE + 1];
+	char		*rdbuf;
 	static char	*remain[1];
 	char		*ptr;
 	ssize_t		rtn;
 
+	rdbuf = (char *)malloc(BUFFER_SIZE + 1);
 	*line = ft_strndup(*remain, -1);
 	free_set(remain, NULL);
 	while ((rtn = read(fd, rdbuf, BUFFER_SIZE)) >= 0)
@@ -42,13 +60,9 @@ int		get_next_line(int fd, char **line)
 			free_set(remain, ft_strndup(ptr + 1, -1));
 			// printf("[gnl > remain] '%s'\n", *remain);
 			free_set(line, ft_strndup(*line, ptr - *line));
-			return (1);
+			return (ret(1, rdbuf));
 		}
-		if (rtn == 0)
-			return (0);
+		return (ret(0, rdbuf));
 	}
-	if (rtn == -1)
-		free_set(line, NULL);
-	free_set(remain, NULL);
-	return (rtn);
+	return (myabort(rdbuf, line, remain));
 }
