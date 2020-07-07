@@ -6,7 +6,7 @@
 /*   By: ywake <ywake@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 01:18:32 by ywake             #+#    #+#             */
-/*   Updated: 2020/07/07 19:35:17 by ywake            ###   ########.fr       */
+/*   Updated: 2020/07/07 22:35:28 by ywake            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ int		get_next_line(int fd, char **line)
 	while ((rtn = read(fd, rdbuf, BUFFER_SIZE)) >= 0)
 	{
 		rdbuf[rtn] = '\0';
-		if (rtn > 0)
+		// printf("[gnl > buf](%zd) '%s'\n", rtn, rdbuf);
+		if (rtn == 0)
+			free_set(line, ft_strjoin(*line, ""));
+		else
 			free_set(line, ft_strjoin(*line, (char *)rdbuf));
 		if ((ptr = ft_strchr(*line, '\n')) != NULL)
 		{
