@@ -6,7 +6,7 @@
 /*   By: ywake <ywake@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 01:18:32 by ywake             #+#    #+#             */
-/*   Updated: 2020/07/08 13:17:49 by ywake            ###   ########.fr       */
+/*   Updated: 2020/07/08 13:42:35 by ywake            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int		get_next_line(int fd, char **line)
 	if ((rdbuf = (char *)malloc(BUFFER_SIZE + 1)) == NULL)
 		return (myabort(rdbuf, NULL, NULL));
 	*line = *remain;
+	*remain = NULL;
 	while ((rtn = read(fd, rdbuf, BUFFER_SIZE)) >= 0)
 	{
 		rdbuf[rtn] = '\0';
