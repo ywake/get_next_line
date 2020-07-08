@@ -6,7 +6,7 @@
 /*   By: ywake <ywake@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 01:18:32 by ywake             #+#    #+#             */
-/*   Updated: 2020/07/07 22:56:18 by ywake            ###   ########.fr       */
+/*   Updated: 2020/07/08 12:08:29 by ywake            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ int		get_next_line(int fd, char **line)
 			free_set(line, ft_strndup(*line, ptr - *line));
 			return (ret(1, rdbuf));
 		}
-		return (ret(0, rdbuf));
+		if (rtn == 0)
+			return (ret(0, rdbuf));
 	}
 	return (myabort(rdbuf, line, remain));
 }
