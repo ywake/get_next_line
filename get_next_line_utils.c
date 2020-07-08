@@ -6,7 +6,7 @@
 /*   By: ywake <ywake@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 01:38:08 by ywake             #+#    #+#             */
-/*   Updated: 2020/07/07 19:37:59 by ywake            ###   ########.fr       */
+/*   Updated: 2020/07/08 12:14:43 by ywake            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strndup(const char *s1, size_t n)
 	if (s1 == NULL)
 		return (NULL);
 	len = 0;
-	while(s1[len] != '\0')
+	while (s1[len] != '\0')
 		len++;
 	len = (len < n) ? len : n;
 	if ((ptr = (char *)malloc(len + 1 * sizeof(char))) == NULL)

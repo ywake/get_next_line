@@ -6,7 +6,7 @@
 /*   By: ywake <ywake@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 01:18:32 by ywake             #+#    #+#             */
-/*   Updated: 2020/07/08 12:08:29 by ywake            ###   ########.fr       */
+/*   Updated: 2020/07/08 12:33:44 by ywake            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 void	free_set(char **dst, char *src)
 {
-	// printf("[free_set] %s\n", src);
 	free(*dst);
 	*dst = src;
 }
@@ -45,20 +44,17 @@ int		get_next_line(int fd, char **line)
 	ssize_t		rtn;
 
 	rdbuf = (char *)malloc(BUFFER_SIZE + 1);
-	*line = ft_strndup(*remain, -1);
-	free_set(remain, NULL);
+	*line = *remain;
 	while ((rtn = read(fd, rdbuf, BUFFER_SIZE)) >= 0)
 	{
 		rdbuf[rtn] = '\0';
-		// printf("[gnl > buf](%zd) '%s'\n", rtn, rdbuf);
 		if (rtn == 0)
 			free_set(line, ft_strjoin(*line, ""));
 		else
 			free_set(line, ft_strjoin(*line, (char *)rdbuf));
 		if ((ptr = ft_strchr(*line, '\n')) != NULL)
 		{
-			free_set(remain, ft_strndup(ptr + 1, -1));
-			// printf("[gnl > remain] '%s'\n", *remain);
+			*remain = ft_strndup(ptr + 1, -1);
 			free_set(line, ft_strndup(*line, ptr - *line));
 			return (ret(1, rdbuf));
 		}
