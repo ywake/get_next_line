@@ -6,7 +6,7 @@
 /*   By: ywake <ywake@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 01:18:32 by ywake             #+#    #+#             */
-/*   Updated: 2020/07/08 12:33:44 by ywake            ###   ########.fr       */
+/*   Updated: 2020/07/08 13:17:49 by ywake            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,22 @@ void	free_set(char **dst, char *src)
 	*dst = src;
 }
 
-int		ret(ssize_t rdrtn, char *rdbuf)
-{
-	free(rdbuf);
-	if (rdrtn > 0)
-		return (1);
-	else
-		return (rdrtn);
-}
-
 int		myabort(char *rdbuf, char **line, char **remain)
 {
 	free_set(&rdbuf, NULL);
 	free_set(line, NULL);
 	free_set(remain, NULL);
 	return (-1);
+}
+
+int		ret(ssize_t rdrtn, char *rdbuf, char **line, char **remain)
+{
+	free_set(&rdbuf, NULL);
+	if (rdrtn > 0)
+		rdrtn = 1;
+	if (*line == NULL || (*remain == NULL && rdrtn != 0))
+		rdrtn = myabort(rdbuf, line, remain);
+	return (rdrtn);
 }
 
 int		get_next_line(int fd, char **line)
@@ -43,23 +44,21 @@ int		get_next_line(int fd, char **line)
 	char		*ptr;
 	ssize_t		rtn;
 
-	rdbuf = (char *)malloc(BUFFER_SIZE + 1);
+	if ((rdbuf = (char *)malloc(BUFFER_SIZE + 1)) == NULL)
+		return (myabort(rdbuf, NULL, NULL));
 	*line = *remain;
 	while ((rtn = read(fd, rdbuf, BUFFER_SIZE)) >= 0)
 	{
 		rdbuf[rtn] = '\0';
-		if (rtn == 0)
-			free_set(line, ft_strjoin(*line, ""));
-		else
-			free_set(line, ft_strjoin(*line, (char *)rdbuf));
-		if ((ptr = ft_strchr(*line, '\n')) != NULL)
+		free_set(line, ft_strjoin(*line, (char *)rdbuf));
+		if ((ptr = ft_strchr(*line, '\n')) != NULL && *line != NULL)
 		{
 			*remain = ft_strndup(ptr + 1, -1);
 			free_set(line, ft_strndup(*line, ptr - *line));
-			return (ret(1, rdbuf));
+			return (ret(1, rdbuf, line, remain));
 		}
-		if (rtn == 0)
-			return (ret(0, rdbuf));
+		if (rtn == 0 || *line == NULL)
+			return (ret(0, rdbuf, line, remain));
 	}
 	return (myabort(rdbuf, line, remain));
 }
