@@ -6,7 +6,7 @@
 /*   By: ywake <ywake@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 01:38:08 by ywake             #+#    #+#             */
-/*   Updated: 2020/07/08 12:14:43 by ywake            ###   ########.fr       */
+/*   Updated: 2021/06/19 03:47:16 by ywake            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ char	*ft_strndup(const char *s1, size_t n)
 	len = 0;
 	while (s1[len] != '\0')
 		len++;
-	len = (len < n) ? len : n;
-	if ((ptr = (char *)malloc(len + 1 * sizeof(char))) == NULL)
+	if (n < len)
+		len = n;
+	if (set_ret_char(&ptr, malloc(len + 1 * sizeof(char))) == NULL)
 		return (NULL);
 	i = 0;
 	while (s1[i] != '\0' && i < len)
@@ -51,7 +52,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (s2 != NULL && s2[len2])
 		len2++;
 	bufsize = len1 + len2 + 1;
-	if ((buf = (char *)malloc(bufsize * sizeof(char))) == NULL)
+	if (set_ret_char(&buf, smalloc(bufsize * sizeof(char))) == NULL)
 		return (NULL);
 	len1 = 0;
 	while (s1 != NULL && *s1)
@@ -65,7 +66,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 char	*ft_strchr(const char *s, int c)
 {
-	int i;
+	int	i;
 
 	if (s == NULL)
 		return (NULL);
@@ -79,4 +80,16 @@ char	*ft_strchr(const char *s, int c)
 	if (s[i] == c)
 		return ((char *)(s + i));
 	return (NULL);
+}
+
+long	set_ret_long(long *buf, long result)
+{
+	*buf = result;
+	return (result);
+}
+
+char	*set_ret_char(char **buf, char *result)
+{
+	*buf = result;
+	return (result);
 }

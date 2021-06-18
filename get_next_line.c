@@ -6,7 +6,7 @@
 /*   By: ywake <ywake@student.42tokyo.jp>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/02 01:18:32 by ywake             #+#    #+#             */
-/*   Updated: 2020/07/08 13:42:35 by ywake            ###   ########.fr       */
+/*   Updated: 2021/06/19 03:43:23 by ywake            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	free_set(char **dst, char *src)
 	*dst = src;
 }
 
-int		myabort(char *rdbuf, char **line, char **remain)
+int	myabort(char *rdbuf, char **line, char **remain)
 {
 	free_set(&rdbuf, NULL);
 	free_set(line, NULL);
@@ -27,7 +27,7 @@ int		myabort(char *rdbuf, char **line, char **remain)
 	return (-1);
 }
 
-int		ret(ssize_t rdrtn, char *rdbuf, char **line, char **remain)
+int	ret(ssize_t rdrtn, char *rdbuf, char **line, char **remain)
 {
 	free_set(&rdbuf, NULL);
 	if (rdrtn > 0)
@@ -37,22 +37,22 @@ int		ret(ssize_t rdrtn, char *rdbuf, char **line, char **remain)
 	return (rdrtn);
 }
 
-int		get_next_line(int fd, char **line)
+int	get_next_line(int fd, char **line)
 {
 	char		*rdbuf;
 	static char	*remain[1];
 	char		*ptr;
 	ssize_t		rtn;
 
-	if ((rdbuf = (char *)malloc(BUFFER_SIZE + 1)) == NULL)
+	if (set_ret_char(&rdbuf, malloc(BUFFER_SIZE + 1)) == NULL)
 		return (myabort(rdbuf, NULL, NULL));
 	*line = *remain;
 	*remain = NULL;
-	while ((rtn = read(fd, rdbuf, BUFFER_SIZE)) >= 0)
+	while (set_ret_long(&rtn, read(fd, rdbuf, BUFFER_SIZE)) >= 0)
 	{
 		rdbuf[rtn] = '\0';
 		free_set(line, ft_strjoin(*line, (char *)rdbuf));
-		if ((ptr = ft_strchr(*line, '\n')) != NULL && *line != NULL)
+		if (*line != NULL && set_ret_char(&ptr, ft_strchr(*line, '\n')) != NULL)
 		{
 			*remain = ft_strndup(ptr + 1, -1);
 			free_set(line, ft_strndup(*line, ptr - *line));
